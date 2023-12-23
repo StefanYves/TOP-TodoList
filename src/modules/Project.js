@@ -2,17 +2,16 @@ import "../style.css";
 import Task from "./Task";
 import { itemDiv } from "./UI";
 
-const content = document.getElementById("content");
-
 class Project {
-  constructor(name) {
+  constructor(name, id) {
     this.name = name;
     this.tasks = [];
+    this.id = id;
   }
 
   addTask(title, description, date) {
-    const newTask = new Task(title, description, date);
-    this.tasks.push(Task);
+    const newTask = new Task(title, description, date, this.id);
+    this.tasks.push(newTask);
     console.log("Tasks Array:", this.tasks);
 
     const taskDiv = document.createElement("div");
@@ -23,18 +22,18 @@ class Project {
             <p>${newTask.date}</p>
       `;
 
-    const btnDel = document.createElement("button");
-    btnDel.classList.add("delete");
-    btnDel.innerText = "Delete";
+    // const btnDel = document.createElement("button");
+    // btnDel.classList.add("delete");
+    // btnDel.innerText = "Delete";
 
-    btnDel.addEventListener("click", () => {
-      this.deleteTask(taskDiv);
-    });
+    // btnDel.addEventListener("click", () => {
+    //   this.deleteTask(taskDiv);
+    // });
 
-    taskDiv.appendChild(btnDel);
-    itemDiv.appendChild(taskDiv);
+    // taskDiv.appendChild(btnDel);
+    // itemDiv.appendChild(taskDiv);
 
-    console.log("newTask:", newTask);
+    // console.log("newTask:", newTask);
   }
 
   deleteTask(taskDiv) {

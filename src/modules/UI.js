@@ -1,5 +1,6 @@
 import "../style.css";
 import Project from "./Project";
+import Task from "./Task";
 
 const content = document.getElementById("content");
 
@@ -64,6 +65,7 @@ footer.innerHTML = `
 
 // Creating form for projects
 const formDiv = document.createElement("div");
+const taskFormDiv = document.createElement("div");
 const overlay = document.getElementById("overlay");
 
 formDiv.classList.add(
@@ -82,9 +84,25 @@ formDiv.classList.add(
 );
 formDiv.id = "form";
 
-const form = document.createElement("form");
+taskFormDiv.classList.add(
+  "fixed",
+  "top-1/2",
+  "left-1/2",
+  "transform",
+  "-translate-x-1/2",
+  "-translate-y-1/2",
+  "bg-gray-200",
+  "p-4",
+  "shadow-lg",
+  "rounded-lg",
+  "z-20",
+  "hidden"
+);
+taskFormDiv.id = "taskForm";
 
-form.classList.add("flex", "flex-col", "items-center", "justify-center");
+const projectForm = document.createElement("form");
+
+projectForm.classList.add("flex", "flex-col", "items-center", "justify-center");
 
 const titleLabel = document.createElement("label");
 titleLabel.setAttribute("for", "title");
@@ -105,10 +123,10 @@ titleInput.classList.add(
   "focus:shadow-outline"
 );
 
-form.appendChild(titleLabel);
-form.appendChild(titleInput);
+projectForm.appendChild(titleLabel);
+projectForm.appendChild(titleInput);
 
-formDiv.appendChild(form);
+formDiv.appendChild(projectForm);
 
 function addProjectToSidebar(project) {
   const projectWrap = document.createElement("div");
@@ -121,6 +139,12 @@ function addProjectToSidebar(project) {
   );
   projectWrap.innerHTML = `<p>${project.name}</p>`;
 
+  projectWrap.addEventListener("click", () => {
+    selectedProject = project; // Assign the clicked project to the selectedProject variable
+    displayTasksForSelectedProject(); // Update displayed tasks for the selected project
+    console.log(selectedProject);
+  });
+
   // Appending the new project title to the sidebar
   projectDiv.appendChild(projectWrap);
 
@@ -130,7 +154,7 @@ function addProjectToSidebar(project) {
 }
 
 // Adding projects to the sidebar when the form is submitted
-form.addEventListener("submit", (e) => {
+projectForm.addEventListener("submit", (e) => {
   e.preventDefault(); // Prevent form submission
 
   // Get the title input value
@@ -139,6 +163,9 @@ form.addEventListener("submit", (e) => {
 
   // Create a new Project object with the title
   const newProject = new Project(titleInputValue);
+
+  addProjectToProjects(newProject); // Add the new project to the projects array
+  populateProjectDropdown();
 
   // Add the project to the sidebar
   addProjectToSidebar(newProject);
@@ -150,35 +177,190 @@ addProject.addEventListener("click", () => {
   overlay.classList.remove("hidden");
 });
 
-const btn = document.getElementById("btn").addEventListener("click", (e) => {
-  const input = document.getElementById("input").value;
-  const newProject = new Project(input);
+let selectedProject = null;
+const projects = []; // Array to store projects
 
-  newProject.addTask("munca", "de facut munca", "12/15/2023");
+function addProjectToProjects(project) {
+  projects.push(project);
+  console.log(projects);
+}
 
-  console.log(newProject);
+function displayTasksForSelectedProject() {
+  if (selectedProject) {
+    const selectedProjectTasks = selectedProject.tasks; // Get tasks for the selected project
 
-  const newDiv = document.createElement("div");
-  newDiv.addEventListener("click", (e) => {
-    newDiv.classList.add("hidden", "task");
+    itemDiv.innerHTML = "";
+    // Iterate through selectedProjectTasks and create HTML elements to display them
+    if (selectedProjectTasks.length === 0) {
+      // If no tasks are present, display a message or handle as needed
+      alert("No tasks available for this project.");
+    } else {
+      // Iterate through tasks and create HTML elements to display them
+      selectedProjectTasks.forEach((task) => {
+        const taskDiv = document.createElement("div");
+        taskDiv.classList.add("task-item"); // You can add classes for styling
+
+        // Create elements for displaying task details
+        const titlePara = document.createElement("p");
+        titlePara.textContent = `Title: ${task.title}`;
+
+        const descriptionPara = document.createElement("p");
+        descriptionPara.textContent = `Description: ${task.description}`;
+
+        const datePara = document.createElement("p");
+        datePara.textContent = `Date: ${task.date}`;
+
+        // Append elements to taskDiv
+        taskDiv.appendChild(titlePara);
+        taskDiv.appendChild(descriptionPara);
+        taskDiv.appendChild(datePara);
+
+        // Append taskDiv to itemDiv to display the task
+        itemDiv.appendChild(taskDiv);
+      });
+    }
+  } else {
+    alert("Please select a project to view tasks");
+  }
+}
+
+const taskForm = document.createElement("form");
+
+taskForm.classList.add("flex", "flex-col", "items-center", "justify-center");
+
+const nameLabel = document.createElement("label");
+nameLabel.setAttribute("for", "title");
+nameLabel.classList.add("mt-5", "text-xl", "ml-5");
+nameLabel.textContent = "Name:";
+const nameInput = document.createElement("input");
+nameInput.setAttribute("type", "text");
+nameInput.setAttribute("name", "title");
+nameInput.setAttribute("id", "title");
+nameInput.classList.add(
+  "bg-gray-100",
+  "text-gray-900",
+  "mt-2",
+  "p-3",
+  "rounded-lg",
+  "focus:outline-none",
+  "focus:shadow-outline"
+);
+
+const descriptionLabel = document.createElement("label");
+descriptionLabel.setAttribute("for", "description");
+descriptionLabel.classList.add("mt-5", "text-xl", "ml-5");
+descriptionLabel.textContent = "Title:";
+
+const descriptionInput = document.createElement("input");
+descriptionInput.setAttribute("type", "text");
+descriptionInput.setAttribute("name", "description");
+descriptionInput.setAttribute("id", "description");
+descriptionInput.classList.add(
+  "bg-gray-100",
+  "text-gray-900",
+  "mt-2",
+  "p-3",
+  "rounded-lg",
+  "focus:outline-none",
+  "focus:shadow-outline"
+);
+
+const dateLabel = document.createElement("label");
+dateLabel.setAttribute("for", "date");
+dateLabel.classList.add("mt-5", "text-xl", "ml-5");
+dateLabel.textContent = "Title:";
+
+const dateInput = document.createElement("input");
+dateInput.setAttribute("type", "date");
+dateInput.setAttribute("name", "date");
+dateInput.setAttribute("id", "date");
+dateInput.classList.add(
+  "bg-gray-100",
+  "text-gray-900",
+  "mt-2",
+  "p-3",
+  "rounded-lg",
+  "focus:outline-none",
+  "focus:shadow-outline"
+);
+
+const projectSelect = document.createElement("select");
+projectSelect.setAttribute("id", "projectSelect");
+
+projectSelect.classList.add(
+  "bg-gray-100",
+  "text-gray-900",
+  "mt-2",
+  "p-3",
+  "rounded-lg",
+  "focus:outline-none",
+  "focus:shadow-outline"
+);
+
+function populateProjectDropdown() {
+  // Clear existing options
+  projectSelect.innerHTML = "";
+
+  // Populate dropdown with projects from the array
+  projects.forEach((project) => {
+    const option = document.createElement("option");
+    option.value = project.id;
+    option.text = project.name;
+    projectSelect.appendChild(option);
   });
+}
 
-  // Appending to sidebar
-  const projectWrap = document.createElement("div");
-  projectWrap.classList.add("mt-5", "ml-5", "text-center");
+taskForm.appendChild(nameLabel);
+taskForm.appendChild(nameInput);
+taskForm.appendChild(descriptionLabel);
+taskForm.appendChild(descriptionInput);
+taskForm.appendChild(dateLabel);
+taskForm.appendChild(dateInput);
+taskForm.appendChild(projectSelect); // Add project selection dropdown to the form
 
-  projectDiv.appendChild(projectWrap);
+taskFormDiv.appendChild(taskForm);
 
-  projectWrap.innerHTML = `
-    <p>${newProject.name}</p>
-`;
+taskForm.addEventListener("keypress", (e) => {
+  if (e.key === "Enter") {
+    e.preventDefault();
+
+    const title = nameInput.value;
+    const description = descriptionInput.value;
+    const date = dateInput.value;
+    const selectedProjectId = projectSelect.value; // Get the selected project ID
+
+    // Find the selected project from the array of projects using its ID
+    const selectedProject = projects.find(
+      (project) => project.id === selectedProjectId
+    );
+
+    if (selectedProject) {
+      selectedProject.addTask(title, description, date); // Add task to the selected project
+      // Refresh UI to display tasks for the selected project
+      displayTasksForSelectedProject();
+    } else {
+      // Handle case where selected project is not found
+      console.error("Selected project not found!");
+    }
+    taskFormDiv.classList.add("hidden");
+    overlay.classList.add("hidden");
+  }
+});
+
+const addTask = document.createElement("button");
+addTask.innerText = "Add Task";
+addTask.addEventListener("click", (e) => {
+  taskFormDiv.classList.remove("hidden");
+  overlay.classList.remove("hidden");
 });
 
 content.appendChild(wrapDiv);
 content.appendChild(formDiv);
+content.appendChild(taskFormDiv);
 wrapper.appendChild(footer);
 wrapper.appendChild(projectDiv);
 wrapper.appendChild(itemDiv);
+itemDiv.appendChild(addTask);
 wrapDiv.appendChild(navDiv);
 wrapDiv.appendChild(wrapper);
 
