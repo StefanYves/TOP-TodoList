@@ -162,13 +162,16 @@ projectForm.addEventListener("submit", (e) => {
   console.log(titleInputValue);
 
   // Create a new Project object with the title
-  const newProject = new Project(titleInputValue);
+  const newProject = new Project(titleInputValue, generateId());
+  console.log(newProject.id);
 
   addProjectToProjects(newProject); // Add the new project to the projects array
   populateProjectDropdown();
 
   // Add the project to the sidebar
   addProjectToSidebar(newProject);
+
+  console.log("titleinputvalue:", titleInputValue, "newproject:", newProject);
 });
 
 // Adding projects to the sidebar when the "Add Project" button is clicked
@@ -177,12 +180,18 @@ addProject.addEventListener("click", () => {
   overlay.classList.remove("hidden");
 });
 
+let projectIdCounter = 0;
+
+function generateId() {
+  projectIdCounter++;
+  return projectIdCounter;
+}
+
 let selectedProject = null;
 const projects = []; // Array to store projects
 
 function addProjectToProjects(project) {
   projects.push(project);
-  console.log(projects);
 }
 
 function displayTasksForSelectedProject() {
@@ -217,10 +226,9 @@ function displayTasksForSelectedProject() {
 
         // Append taskDiv to itemDiv to display the task
         itemDiv.appendChild(taskDiv);
+        console.log("selectedproject in display function:", selectedProject);
       });
     }
-  } else {
-    alert("Please select a project to view tasks");
   }
 }
 
@@ -249,7 +257,7 @@ nameInput.classList.add(
 const descriptionLabel = document.createElement("label");
 descriptionLabel.setAttribute("for", "description");
 descriptionLabel.classList.add("mt-5", "text-xl", "ml-5");
-descriptionLabel.textContent = "Title:";
+descriptionLabel.textContent = "Description:";
 
 const descriptionInput = document.createElement("input");
 descriptionInput.setAttribute("type", "text");
@@ -330,12 +338,12 @@ taskForm.addEventListener("keypress", (e) => {
     const selectedProjectId = projectSelect.value; // Get the selected project ID
 
     // Find the selected project from the array of projects using its ID
-    const selectedProject = projects.find(
-      (project) => project.id === selectedProjectId
-    );
+    const selectProject = projects.find((project) => {
+      return project.id === parseInt(selectedProjectId);
+    });
 
-    if (selectedProject) {
-      selectedProject.addTask(title, description, date); // Add task to the selected project
+    if (selectProject) {
+      selectProject.addTask(title, description, date); // Add task to the selected project
       // Refresh UI to display tasks for the selected project
       displayTasksForSelectedProject();
     } else {
