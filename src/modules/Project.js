@@ -1,6 +1,6 @@
 import "../style.css";
 import Task from "./Task";
-import { itemDiv } from "./UI";
+import { itemDiv, saveProjectsToLocalStorage } from "./UI";
 
 class Project {
   constructor(name, id) {
@@ -12,28 +12,9 @@ class Project {
   addTask(title, description, date) {
     const newTask = new Task(title, description, date, this.id);
     this.tasks.push(newTask);
+    saveProjectsToLocalStorage();
     console.log("Tasks Array:", this.tasks);
-
-    const taskDiv = document.createElement("div");
-    taskDiv.innerHTML = `
-        <div id = "task" class = "delete">
-            <p>${newTask.title}</p>
-            <p>${newTask.description}</p> 
-            <p>${newTask.date}</p>
-      `;
-
-    // const btnDel = document.createElement("button");
-    // btnDel.classList.add("delete");
-    // btnDel.innerText = "Delete";
-
-    // btnDel.addEventListener("click", () => {
-    //   this.deleteTask(taskDiv);
-    // });
-
-    // taskDiv.appendChild(btnDel);
-    // itemDiv.appendChild(taskDiv);
-
-    // console.log("newTask:", newTask);
+    console.log("newTask:", newTask);
   }
 
   deleteTask(taskDiv) {
@@ -47,6 +28,14 @@ class Project {
     } else {
       console.error("Task element not found");
     }
+  }
+
+  toJSON() {
+    return {
+      name: this.name,
+      tasks: this.tasks.map((task) => task.toJSON()), // Convert tasks to JSON
+      id: this.id,
+    };
   }
 }
 
