@@ -1,10 +1,11 @@
 # TOP-TodoList
 
-Welcome to the Advanced Todo List Manager, a powerful JavaScript-based application with Tailwind CSS styling and Webpack integration. This project allows you to organize your tasks into projects, mark tasks as done, and utilizes local storage for persistent data.
+Welcome to the Todo List Manager, a powerful JavaScript-based application with Tailwind CSS styling and Webpack integration. This project allows you to organize your tasks into projects, mark tasks as done, and utilizes local storage for persistent data.
 
 # How It's Made
 
 Tech Used: HTML, JavaScript, Tailwind CSS, Webpack
+
 
 I've designed this Todo List Manager to provide a robust and user-friendly experience for task organization. Here are some key features:
 
