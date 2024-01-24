@@ -33,8 +33,11 @@ Local Storage: Your projects and tasks are automatically saved and loaded using 
 # How to Use
 
 1.Clone this repository to your local machine.
+
 2.Run npm install to install the necessary dependencies.
+
 3.Launch the application using npm start to open it in your default web browser.
+
 4.Start organizing your tasks efficiently using the user-friendly interface.
 
 # Lessons Learned
